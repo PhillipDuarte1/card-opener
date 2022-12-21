@@ -2,14 +2,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 import { auth } from '../utils/firebase';
 
 const MainScreen = () => {
     const navigation = useNavigation();
     const [user, setUser] = useState(null);
-    const [token, setToken] = useState(null);
+    // const [token, setToken] = useState(null);
 
     useEffect(() => {
+        navigation.setOptions({
+            title: '',
+            headerStyle: {
+                // backgroundColor: 'transparent',
+            },
+            headerLeft: () => (user != null ? <Text>{user.displayName}</Text> : <View></View>),
+            headerRight: () => (<MaterialIcons name='settings' size={24} color='black' />)
+        })
         const unsubscribe = auth.onAuthStateChanged((user) => {
             if (user) {
                 setUser(user);
@@ -49,8 +58,7 @@ const MainScreen = () => {
                     <Text style={styles.headerSub}>Get access to exclusive packs and features by creating an account</Text>
                 </View>
             )}
-
-            {user ? (
+            {/* {user ? ( */}
                 <View>
                     <TouchableOpacity onPress={() => navigation.navigate('Packs')} style={styles.button}>
                         <Text>Open Packs</Text>
@@ -59,7 +67,7 @@ const MainScreen = () => {
                         <Text>View Binder</Text>
                     </TouchableOpacity>
                 </View>
-            ) : (
+            {/* ) : ( */}
                 <View>
                     <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.button}>
                         <Text style={styles.buttonText}>Login</Text>
@@ -68,8 +76,7 @@ const MainScreen = () => {
                         <Text style={styles.buttonText}>Register</Text>
                     </TouchableOpacity>
                 </View>
-            )
-            }
+            {/* )} */}
         </View >
     );
 };

@@ -49,7 +49,7 @@ const Card = ({ card }) => {
   const shine = () => {
     let delay;
     if (card.type === 'rare') {
-      delay = 1000;
+      delay = 1500;
     } else if (card.type === 'very rare') {
       delay = 500;
     } else {
@@ -57,18 +57,19 @@ const Card = ({ card }) => {
     }
     Animated.timing(shineAnimation, {
       toValue: 390,
-      duration: 1700,
+      duration: 1200,
       delay: delay,
-      useNativeDriver: true,
+      useNativeDriver: true
     }).start(() => {
       shineAnimation.setValue(-100);
       shine();
     });
   };
 
+
   const opacity = shineAnimation.interpolate({
     inputRange: [0, 150, 390],
-    outputRange: [.2, .4, .1],
+    outputRange: [.02, .08, .01],
   });
 
   const shineStyle = {
@@ -218,6 +219,10 @@ const styles = StyleSheet.create({
     width: 30,
     height: '130%',
     borderWidth: 40,
-    borderColor: '#fff'
+    borderColor: '#fff',
+    shadowColor: '#fff',
+    shadowOffset: { width: 2, height: 4 },
+    shadowOpacity: 1,
+    shadowRadius: 40
   }
 });
