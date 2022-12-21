@@ -6,6 +6,7 @@ import { auth } from '../utils/firebase';
 const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [username, setUsername] = useState(undefined);
 
     const navigation = useNavigation();
 
@@ -20,7 +21,11 @@ const Register = () => {
         if (!email || !password) {
             return Alert.alert('Invalid Registration', 'Email and Password cannot be Empty');
         } else {
-            auth.createUserWithEmailAndPassword(email, password).then(() => {
+            auth.createUserWithEmailAndPassword(email, password).then((user) => {
+                user.user.updateProfile({
+                    displayName: username
+                })
+            }).then(() => {
                 navigation.navigate('Login');
             }).catch(error => {
                 console.log(error);
@@ -31,6 +36,14 @@ const Register = () => {
     return (
         <View style={styles.container}>
             <Text>Create Account</Text>
+            <View style={styles.inputContainer}>
+                <TextInput
+                    placeholder="Username"
+                    value={username}
+                    onChangeText={text => setUsername(text)}
+                    style={styles.input}
+                />
+            </View>
             <View style={styles.inputContainer}>
                 <TextInput
                     placeholder="Email"
