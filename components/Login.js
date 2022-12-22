@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Pressable } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { auth } from '../utils/firebase';
@@ -20,7 +19,7 @@ const Login = () => {
 
     const handleLogin = async () => {
         await auth.signInWithEmailAndPassword(email, password).then((user) => {
-            console.log(user)
+            // console.log(user)
             if (checked) {
                 // auth.onAuthStateChanged(async (user) => {
                 //     if (user) {

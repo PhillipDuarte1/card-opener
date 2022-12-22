@@ -11,6 +11,7 @@
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
     "@react-native-async-storage/async-storage": "^1.17.11",
+    "@react-navigation/drawer": "^6.5.6",
     "@react-navigation/native": "^6.1.0",
     "@react-navigation/stack": "^6.3.8",
     "expo": "~47.0.8",
@@ -18,7 +19,9 @@
     "firebase": "^9.15.0",
     "lodash": "^4.17.21",
     "react": "18.1.0",
-    "react-native": "0.70.5"
+    "react-native": "0.70.5",
+    "react-native-gesture-handler": "~2.8.0",
+    "react-native-reanimated": "~2.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
