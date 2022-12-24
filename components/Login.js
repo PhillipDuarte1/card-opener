@@ -19,7 +19,6 @@ const Login = () => {
 
     const handleLogin = async () => {
         await auth.signInWithEmailAndPassword(email, password).then((user) => {
-            // console.log(user)
             if (checked) {
                 // auth.onAuthStateChanged(async (user) => {
                 //     if (user) {

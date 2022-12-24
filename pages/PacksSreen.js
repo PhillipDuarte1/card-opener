@@ -5,7 +5,9 @@ const PacksScreen = () => {
     return (
         <View style={styles.container}>
             <Text>Home</Text>
-            <CardPack />
+            <CardPack packName={'Test'} />
+            <Text>Haha</Text>
+            <CardPack packName={'Test2'} />
         </View>
     );
 };
@@ -15,7 +17,6 @@ export default PacksScreen;
 const styles = StyleSheet.create({
     container: {
         display: 'flex',
-        flex: 1,
         marginTop: '15%',
         alignItems: 'center'
     }

@@ -13,10 +13,17 @@ const Binder = () => {
       if (user) {
         db.ref(`users/${user.uid}/collection`).on('value', (snapshot) => {
           if (snapshot.val() != null) {
-            const userCards = snapshot.val();
-            const cardArray = Object.values(userCards);
+            const userPacks = snapshot.val();
+            const packArray = Object.values(userPacks);
 
-            setCards(cardArray);
+            let collectedCards = [];
+
+            packArray.forEach(pack => {
+              const packCards = Object.values(pack.cards);
+              collectedCards = [...collectedCards, ...packCards];
+            });
+
+            setCards(collectedCards);
             setLoading(false);
           } else {
             setMessage('No cards have been collected');

@@ -3,16 +3,16 @@ import { View, Button, StyleSheet } from 'react-native';
 import { db, auth } from '../utils/firebase';
 import Card from './Card';
 
-const CardPack = () => {
+const CardPack = ({ packName }) => {
   const [cards, setCards] = useState([]);
 
   const openPack = () => {
     auth.onAuthStateChanged((user) => {
       if (user) {
-        db.ref(`users/${user.uid}/collection`).once('value', (snapshot) => {
+        db.ref(`users/${user.uid}/collection/${packName}/cards`).once('value', (snapshot) => {
           const collection = snapshot.val() || {};
           const collectionArray = Object.values(collection);
-          db.ref('cards').once('value', (snapshot) => {
+          db.ref(`packs/${packName}/cards`).once('value', (snapshot) => {
             const cards = snapshot.val();
             const cardArray = Object.values(cards);
             const selectedCards = [];
@@ -61,7 +61,7 @@ const CardPack = () => {
             }
 
             for (const card of selectedCards) {
-              db.ref(`users/${user.uid}/collection/${card.id}`).set(card);
+              db.ref(`users/${user.uid}/collection/${packName}/cards/${card.id}`).set(card);
             }
             setCards([]);
             setCards(selectedCards);
@@ -88,15 +88,8 @@ export default CardPack;
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    width: '100%',
-    height: '100%'
-  },
-  scrollView: {
-    paddingVertical: 30,
-    paddingHorizontal: 5,
-    backgroundColor: '#fff',
-    width: '100%',
-    marginBottom: 55,
+    // width: '100%',
+    // height: '100%'
   },
   cardContainer: {
   },
