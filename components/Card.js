@@ -12,7 +12,7 @@ const Card = ({ card }) => {
   const shineAnimation = useRef(new Animated.Value(-100)).current;
 
   useEffect(() => {
-    storage.ref(card.image).getDownloadURL().then((url) => {
+    storage.ref(`cards/${card.image}`).getDownloadURL().then((url) => {
       setImageURL(url);
     });
     shine();

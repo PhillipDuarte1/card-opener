@@ -43,7 +43,7 @@ const CardPack = () => {
               let cardExists = false;
               let existingCard;
               for (const card of collectionArray) {
-                console.log(card)
+                // console.log(card)
                 if (card.id === selectedCard.id) {
                   cardExists = true;
                   existingCard = card;

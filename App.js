@@ -26,7 +26,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName='Main'>
+      <Drawer.Navigator>
         <Drawer.Screen name='Home' options={{ headerShown: false }} component={MyStack} />
         <Drawer.Screen name='Packs' component={PacksScreen} />
         {/* Binder */}
