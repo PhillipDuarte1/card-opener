@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { auth, db, storage } from '../utils/firebase';
 
 const Binder = () => {
-  const [cards, setCards] = useState([]);
-  const [imageURLs, setImageURLs] = useState([]);
+  const [packs, setPacks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(null);
+  const [imageURLs, setImageURLs] = useState({});
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -14,25 +14,18 @@ const Binder = () => {
         db.ref(`users/${user.uid}/collection`).on('value', (snapshot) => {
           if (snapshot.val() != null) {
             const userPacks = snapshot.val();
-            const packArray = Object.values(userPacks);
+            const packArray = Object.entries(userPacks);
 
-            let collectedCards = [];
-
-            packArray.forEach(pack => {
-              const packCards = Object.values(pack.cards);
-              collectedCards = [...collectedCards, ...packCards];
-            });
-
-            setCards(collectedCards);
+            setPacks(packArray);
             setLoading(false);
           } else {
             setMessage('No cards have been collected');
-            setCards([]);
+            setPacks([]);
             setLoading(false);
           }
         });
       } else {
-        setCards([]);
+        setPacks([]);
         setLoading(false);
       }
     });
@@ -40,14 +33,26 @@ const Binder = () => {
   }, []);
 
   useEffect(() => {
-    const imagePromises = cards.map((card) => {
-      return storage.ref(`cards/${card.image}`).getDownloadURL();
-    });
+    if (!loading) {
+      const imageValues = packs.flatMap(([packName, pack]) => {
+        return pack.cards.filter(card => card !== undefined).map((card) => {
+          return card.image;
+        });
+      });
 
-    Promise.all(imagePromises).then((urls) => {
-      setImageURLs(urls);
-    });
-  }, [cards]);
+      const imagePromises = imageValues.map((card) => {
+        return storage.ref(`cards/${card}`).getDownloadURL();
+      });
+
+      Promise.all(imagePromises).then((urls) => {
+        const imageURLMap = imageValues.reduce((acc, image, index) => {
+          acc[image] = urls[index];
+          return acc;
+        }, {});
+        setImageURLs(imageURLMap);
+      });
+    }
+  }, [loading, packs]);
 
   return (
     <View style={styles.container}>
@@ -61,23 +66,35 @@ const Binder = () => {
             <Text>{message}</Text>
           </View>
         ) : (
-          cards.map((card, index) => {
+          packs.map(([packName, pack], index) => {
             return (
-              <View key={index} style={styles.cardSleeve}>
-                <View style={styles.card}>
-                  <Image
-                    source={{ uri: imageURLs[index] }}
-                    style={styles.image}
-                    resizeMode='cover'
-                  />
-                </View>
-                <View>
-                  <Text>{card.name}</Text>
-                  <Text>{card.count}</Text>
-                </View>
+              <View key={index}>
+                <Text style={styles.packName}>{packName}</Text>
+                <ScrollView key={packName} horizontal={true} style={styles.scrollView}>
+                  {pack.cards.map((card, index) => {
+                    return (
+                      <View key={index} style={styles.cardSleeve}>
+                        <View style={styles.card}>
+                          {card && (
+                            <Image
+                              source={{ uri: imageURLs[card.image] }}
+                              style={styles.image}
+                              resizeMode='cover'
+                            />
+                          )}
+                        </View>
+                        <View>
+                          <Text>{card.name}</Text>
+                          <Text>{card.count}</Text>
+                        </View>
+                      </View>
+                    )
+                  })}
+                </ScrollView>
               </View>
             )
-          }))
+          })
+        )
       )}
     </View>
   );
@@ -87,7 +104,7 @@ export default Binder;
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row'
+    // flexDirection: 'row'
   },
   cardSleeve: {
     margin: 15
@@ -104,5 +121,8 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%'
+  },
+  scrollView: {
+    flexDirection: 'row'
   }
 });
