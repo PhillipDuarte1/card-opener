@@ -41,8 +41,11 @@ const Register = () => {
                     placeholder="Username"
                     value={username}
                     onChangeText={text => setUsername(text)}
+                    maxLength={10}
                     style={styles.input}
                 />
+                {/* <Text style={ styles.charCount }>{username ? 20 - username.length: 20} characters left</Text> */}
+                <Text style={styles.charCount}>{username ? username.length : 0}/10</Text>
             </View>
             <View style={styles.inputContainer}>
                 <TextInput
@@ -79,6 +82,9 @@ const styles = StyleSheet.create({
         // textAlign: 'center'
     },
     inputContainer: {
+        position: 'relative',
+        paddingBottom: 12,
+        marginTop: 15
     },
     label: {
         paddingHorizontal: '15%'
@@ -94,6 +100,12 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         marginVertical: 10,
         fontSize: 18
+    },
+    charCount: {
+        position: 'absolute',
+        bottom: 0,
+        right: '14.5%',
+        color: '#C27579'
     }
 });
 

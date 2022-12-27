@@ -83,11 +83,12 @@ export default function App() {
             style={styles.item}
           />
         </ScrollView>
-         <View style={styles.footer}>
+        <View style={styles.footer}>
           <DrawerItem
             label='Logout'
             icon={() => (<MaterialCommunityIcons name="logout" size={24} color="black" />)}
-            onPress={() => props.navigation.navigate('Logout')}
+            onPress={() => auth.signOut().then(() => { props.navigation.navigate('Home') })}
+            style={[styles.item, styles.lastChild]}
           />
         </View>
       </View>
@@ -107,9 +108,12 @@ export default function App() {
           // options={{ headerShown: false }}
           component={PacksScreen}
         />
-        {/* Binder */}
+        <Drawer.Screen
+          name='Binder'
+          // options={{ headerShown: false }}
+          component={BinderScreen}
+        />
         {/* Settings */}
-        {/* Logout */}
       </Drawer.Navigator>
     </NavigationContainer>
   );
@@ -159,5 +163,8 @@ const styles = StyleSheet.create({
   },
   firstChild: {
     marginTop: 14
+  },
+  lastChild: {
+    marginBottom: 14
   }
 });
