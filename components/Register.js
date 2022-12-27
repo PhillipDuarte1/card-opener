@@ -23,7 +23,7 @@ const Register = () => {
         } else {
             auth.createUserWithEmailAndPassword(email, password).then((user) => {
                 user.user.updateProfile({
-                    displayName: username
+                    displayName: username[0].toUpperCase() + username.slice(1)
                 })
             }).then(() => {
                 navigation.navigate('Login');
