@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { auth } from '../utils/firebase';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [checked, setChecked] = useState(false);
+    const [emailFocus, setEmailFocus] = useState(false);
+    const [passwordFocus, setPasswordFocus] = useState(false); 5
 
     const navigation = useNavigation();
 
@@ -38,52 +40,55 @@ const Login = () => {
         <View style={styles.container}>
             <Text style={styles.header}>Login</Text>
             <View style={styles.inputContainer}>
-                <Text style={styles.label}>Email</Text>
+                <Text style={emailFocus ? [styles.label, styles.focus] : styles.label}>Email</Text>
                 <TextInput
                     value={email}
                     onChangeText={text => setEmail(text)}
                     style={styles.input}
+                    onFocus={() => { setEmailFocus(true) }}
+                    onBlur={() => { setEmailFocus(false) }}
                 />
             </View>
             <View style={styles.inputContainer}>
-                <Text style={styles.label}>Password</Text>
+                <Text style={passwordFocus ? [styles.label, styles.focus] : styles.label}>Password</Text>
                 <TextInput
                     value={password}
                     onChangeText={text => setPassword(text)}
                     secureTextEntry={true}
                     style={styles.input}
+                    onFocus={() => { setPasswordFocus(true) }}
+                    onBlur={() => { setPasswordFocus(false) }}
                 />
-                <View style={styles.checkboxContainer}>
-                    <Pressable onPress={() => { setChecked(!checked) }}>
-                        {checked == false ? <MaterialCommunityIcons name="checkbox-blank-outline" size={24} color="black" />
-                            : <MaterialCommunityIcons name="checkbox-marked" size={24} color="black" />
-                        }
-                    </Pressable>
-                    <Text style={styles.checkboxText}>Remember me?</Text>
+                <View style={styles.passwordFooter}>
+                    <View style={styles.checkboxContainer}>
+                        <Pressable onPress={() => { setChecked(!checked) }}>
+                            {checked == false ? <MaterialCommunityIcons name="checkbox-blank-outline" size={24} color="gray" />
+                                : <MaterialCommunityIcons name="checkbox-marked" size={24} color="gray" />
+                            }
+                        </Pressable>
+                        <Text style={styles.checkboxText}>Remember me?</Text>
+                    </View>
+                    <TouchableOpacity onPress={() => { console.log('test') }}>
+                        <Text style={styles.forgot}>Forgot Password?</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
-            <View>
-                <TouchableOpacity onPress={handleLogin} style={styles.button}>
-                    <Text style={styles.buttonText}>Login</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => { console.log('test') }}>
-                    <Text style={styles.forgot}>Forgot Password?</Text>
-                </TouchableOpacity>
-            </View>
+            <TouchableOpacity onPress={handleLogin} style={styles.button}>
+                <Text style={styles.buttonText}>Login</Text>
+            </TouchableOpacity>
             <View style={styles.divider}>
                 <Text style={styles.or}>OR</Text>
                 <View style={styles.line} />
             </View>
             <View style={styles.socialsContainer}>
-                <View style={[styles.circle, styles.google]}>
-                    <FontAwesome name='google' size={30} color='#db4437' />
-                </View>
-                <View style={[styles.circle, styles.facebook]}>
-                    <FontAwesome name='facebook' size={30} color='#4267b2' />
-                </View>
-                <View style={[styles.circle, styles.phone]}>
-                    <FontAwesome name='phone' size={30} color='black' />
-                </View>
+                <TouchableOpacity onPress={() => { }} style={[styles.buttonSocial, styles.google]}>
+                    <AntDesign name="google" size={24} color="#fff" />
+                    <Text style={styles.buttonText}>Google</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => { }} style={[styles.buttonSocial, styles.apple]}>
+                    <AntDesign name="apple1" size={24} color="#fff" />
+                    <Text style={styles.buttonText}>Apple</Text>
+                </TouchableOpacity>
             </View>
             <View style={styles.linkContainer}>
                 <Text style={styles.linkText}>
@@ -107,79 +112,73 @@ const styles = StyleSheet.create({
         fontSize: 22,
         fontWeight: '500',
         color: '#555555',
-        paddingHorizontal: '12.5%',
+        paddingHorizontal: '14.5%',
         paddingVertical: '7%',
     },
     inputContainer: {
-        marginVertical: 15
+        position: 'relative',
+        alignSelf: 'center',
+        width: '70%',
+        borderWidth: 2,
+        borderColor: 'gray',
+        borderRadius: 6,
+        marginVertical: 10
     },
     label: {
-        fontSize: 17,
-        fontWeight: '500',
-        color: '#555555',
-        paddingHorizontal: '13%',
-        marginBottom: 4
+        position: 'absolute',
+        top: -11,
+        left: 13,
+        paddingHorizontal: 6,
+        paddingVertical: 1,
+        backgroundColor: '#fff',
+        fontSize: 14,
+        color: 'gray'
+    },
+    focus: {
+        color: 'lightblue'
     },
     input: {
-        alignSelf: 'center',
-        width: '75%',
-        borderWidth: 2,
-        borderColor: '#bebebe',
-        borderRadius: 8,
-        padding: 16,
-        fontSize: 18,
-        color: '#222e5a'
+        padding: 13,
+        fontSize: 18
     },
     button: {
         alignSelf: 'center',
-        width: '76%',
-        borderRadius: 12,
+        width: '50%',
+        borderRadius: 8,
         paddingVertical: 16,
-        marginVertical: 8,
+        marginVertical: 24,
         color: '#fff',
-        backgroundColor: '#222e5a',
-        shadowColor: '#171717',
-        shadowOffset: { width: -2, height: 4 },
-        shadowOpacity: 0.2,
-        shadowRadius: 3
+        backgroundColor: 'gray',
+        marginTop: 50
     },
     buttonText: {
         textAlign: 'center',
         fontSize: 16,
+        fontWeight: '600',
         color: '#fff'
     },
-    forgot: {
-        alignSelf: 'flex-end',
-        paddingRight: '13%',
-        marginTop: 2,
-        color: '#555555'
-    },
     divider: {
-        padding: 16
+        padding: 8
     },
     or: {
         alignSelf: 'center',
         backgroundColor: '#fff',
-        color: '#bebebe',
-        fontSize: 22,
-        padding: 4,
-        borderWidth: 1.5,
-        borderColor: '#bebebe',
-        borderRadius: 8
+        color: 'darkgray',
+        fontSize: 14,
+        paddingHorizontal: 16,
+        paddingVertical: 4,
     },
     line: {
         alignSelf: 'center',
         position: 'absolute',
-        top: 34,
-        bottom: 0,
+        top: 21,
         zIndex: -1,
-        width: '80%',
-        height: 1.5,
-        backgroundColor: '#bebebe',
+        width: '64%',
+        height: 1.3,
+        backgroundColor: 'darkgray',
     },
     linkContainer: {
         alignSelf: 'center',
-        // width: '76%',
         borderRadius: 12,
         paddingVertical: 16,
         marginVertical: 8
@@ -195,31 +194,44 @@ const styles = StyleSheet.create({
     },
     socialsContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-evenly'
+        alignSelf: 'center'
     },
-    circle: {
+    buttonSocial: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
         alignItems: 'center',
-        padding: 15,
-        width: 70,
-        height: 70,
-        borderWidth: 5,
-        borderRadius: 100
+        width: '25%',
+        borderRadius: 8,
+        paddingVertical: 16,
+        marginHorizontal: 8,
+        marginVertical: 16,
+        color: '#fff',
+        backgroundColor: 'gray'
     },
     google: {
         borderColor: '#db4437'
     },
-    facebook: {
-        borderColor: '#4267b2'
+    apple: {
+
     },
     checkboxContainer: {
-        flexDirection: 'row',
-        alignSelf: 'flex-start',
-        paddingLeft: '12%',
-        marginTop: 12
+        position: 'absolute',
+        bottom: -32,
+        left: -4,
+        flexDirection: 'row'
     },
     checkboxText: {
         textAlignVertical: 'center',
         paddingTop: 3,
         paddingLeft: 6
+    },
+    forgot: {
+        color: '#555555',
+        position: 'absolute',
+        bottom: -28,
+        right: 0
+    },
+    passwordFooter: {
+        position: 'relative'
     }
 });

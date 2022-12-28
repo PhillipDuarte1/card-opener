@@ -18,7 +18,7 @@ const Register = () => {
 
     useEffect(() => {
         navigation.setOptions({
-            headerLeft: () => <View></View>,
+            // headerLeft: () => <View></View>,
             title: 'Register'
         });
     }, []);
@@ -114,12 +114,12 @@ const Register = () => {
                 <Text style={styles.or}>OR</Text>
                 <View style={styles.line} />
             </View>
-            <View style={styles.buttonExtraContainer}>
-                <TouchableOpacity onPress={handleRegister} style={[styles.buttonExtra, styles.google]}>
+            <View style={styles.socialsContainer}>
+                <TouchableOpacity onPress={handleRegister} style={[styles.buttonSocial, styles.google]}>
                     <AntDesign name="google" size={24} color="#fff" />
                     <Text style={styles.buttonText}>Google</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleRegister} style={[styles.buttonExtra, styles.apple]}>
+                <TouchableOpacity onPress={handleRegister} style={[styles.buttonSocial, styles.apple]}>
                     <AntDesign name="apple1" size={24} color="#fff" />
                     <Text style={styles.buttonText}>Apple</Text>
                 </TouchableOpacity>
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: 'gray',
         borderRadius: 6,
-        marginVertical: 10,
+        marginVertical: 10
     },
     label: {
         position: 'absolute',
@@ -245,11 +245,11 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: '#fff'
     },
-    buttonExtraContainer: {
+    socialsContainer: {
         flexDirection: 'row',
         justifyContent: 'center'
     },
-    buttonExtra: {
+    buttonSocial: {
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         alignItems: 'center',
