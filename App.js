@@ -1,6 +1,6 @@
 import { View, Text, Image, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { useState, useEffect } from 'react';
-import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator, DrawerItem } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
@@ -10,6 +10,7 @@ import PacksScreen from './pages/PacksSreen';
 import LoginScreen from './pages/LoginScreen';
 import RegisterScreen from './pages/RegisterScreen';
 import BinderScreen from './pages/BinderScreen';
+import AddPackScreen from './pages/AddPackScreen';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -36,6 +37,7 @@ export default function App() {
         <Stack.Screen name='Register' component={RegisterScreen} />
         <Stack.Screen name='Packs' component={PacksScreen} />
         <Stack.Screen name='Binder' component={BinderScreen} />
+        <Stack.Screen name='AddPack' component={AddPackScreen} />
       </Stack.Navigator>
     )
   }
@@ -45,7 +47,7 @@ export default function App() {
       <View {...props} style={styles.container}>
         <View style={styles.headerContainer}>
           <Image
-            source={require('./assets/icon.png')}
+            source={user ? user.photoURL ? { uri: user.photoURL } : require('./assets/icon.png') : {}}
             style={styles.image}
           />
           {user ? (
@@ -74,6 +76,12 @@ export default function App() {
             label='Binder'
             icon={() => (<MaterialCommunityIcons name="view-grid" size={24} color="black" />)}
             onPress={() => props.navigation.navigate('Binder')}
+            style={styles.item}
+          />
+          <DrawerItem
+            label='Add Pack'
+            icon={() => (<MaterialIcons name="add-to-photos" size={24} color="black" />)}
+            onPress={() => props.navigation.navigate('AddPack')}
             style={styles.item}
           />
           <DrawerItem
@@ -113,6 +121,11 @@ export default function App() {
           // options={{ headerShown: false }}
           component={BinderScreen}
         />
+        <Drawer.Screen
+          name='AddPack'
+          // options={{ headerShown: false }}
+          component={AddPackScreen}
+        />
         {/* Settings */}
       </Drawer.Navigator>
     </NavigationContainer>
@@ -126,9 +139,6 @@ const styles = StyleSheet.create({
   headerContainer: {
   },
   image: {
-    // width: '100%',
-    // height: 150,
-    // marginTop: 50
     width: 100,
     height: 100,
     marginTop: 50,

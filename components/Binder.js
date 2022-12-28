@@ -16,6 +16,7 @@ const Binder = () => {
             const userPacks = snapshot.val();
             const packArray = Object.entries(userPacks);
 
+            setMessage(null);
             setPacks(packArray);
             setLoading(false);
           } else {
