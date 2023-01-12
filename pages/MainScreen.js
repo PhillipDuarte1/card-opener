@@ -1,6 +1,6 @@
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ImageBackground, Dimensions } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { auth } from '../utils/firebase';
 
@@ -22,9 +22,7 @@ const MainScreen = () => {
     useEffect(() => {
         navigation.setOptions({
             title: '',
-            headerStyle: {
-                // backgroundColor: 'transparent',
-            },
+            headerTransparent: true,
             headerLeft: () => (user ? <TouchableOpacity onPress={() => { navigation.dispatch(DrawerActions.openDrawer('Drawer')) }}><MaterialIcons name='menu' size={40} color='black' style={styles.menu} /></TouchableOpacity> : <View></View>),
             // headerRight: () => (<MaterialIcons name='settings' size={24} color='black' />)
             // <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
@@ -33,6 +31,10 @@ const MainScreen = () => {
 
     return (
         <View style={styles.container}>
+            <ImageBackground style={styles.backgroundImage} source={require('../assets/mountain.png')}  >
+                <View style={[styles.line]} />
+                <View style={[styles.lineTwo]} />
+            </ImageBackground>
             {user ? (
                 <View style={styles.headerContainer}>
                     <Text style={styles.headerMain}>Welcome, {user.displayName}</Text>
@@ -46,10 +48,7 @@ const MainScreen = () => {
             {user ? (
                 <View>
                     <TouchableOpacity onPress={() => navigation.navigate('Packs')} style={styles.button}>
-                        <Text>Open Packs</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate('Binder')}>
-                        <Text>View Binder</Text>
+                        <Text style={styles.buttonText}>Open Packs</Text>
                     </TouchableOpacity>
                 </View>
             ) : (
@@ -76,7 +75,7 @@ const styles = StyleSheet.create({
     },
     headerContainer: {
         position: 'absolute',
-        top: 0,
+        top: 76,
         left: 0,
         padding: 20,
     },
@@ -90,20 +89,51 @@ const styles = StyleSheet.create({
     },
     button: {
         alignSelf: 'center',
-        width: '76%',
-        borderRadius: 50,
+        width: '50%',
+        borderRadius: 8,
         paddingVertical: 16,
-        marginVertical: 8,
         color: '#fff',
-        backgroundColor: '#222e5a'
+        backgroundColor: 'gray',
+        marginTop: 25
     },
     buttonText: {
         textAlign: 'center',
         fontSize: 16,
-        fontWeight: '500',
+        fontWeight: '600',
         color: '#fff'
     },
     menu: {
         marginLeft: 15,
+    },
+    backgroundImage: {
+        position: 'absolute',
+        top: 0,
+        height: '100%',
+        width: Dimensions.get('window').width,
+    },
+    line: {
+        position: 'absolute',
+        marginTop: '98%',
+        height: '190%',
+        width: 1000,
+        backgroundColor: '#fff',
+        transform: [
+            {
+                rotate: '-50deg'
+            }
+        ]
+    },
+    lineTwo: {
+        position: 'absolute',
+        marginTop: '84%',
+        marginLeft: '-190%',
+        height: '200%',
+        width: 1000,
+        backgroundColor: '#fff',
+        transform: [
+            {
+                rotate: '52deg'
+            }
+        ]
     }
 });

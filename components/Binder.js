@@ -70,8 +70,12 @@ const Binder = () => {
           packs.map(([packName, pack], index) => {
             return (
               <View key={index}>
-                <Text style={styles.packName}>{packName}</Text>
-                <ScrollView key={packName} horizontal={true} style={styles.scrollView}>
+                <View style={styles.packNameContainer}>
+                  <Text style={styles.packName}>{packName}</Text>
+                  <View style={styles.line} />
+                  <View style={styles.lineTwo} />
+                </View>
+                <ScrollView key={packName} horizontal={true} showsHorizontalScrollIndicator={false} style={styles.scrollView}>
                   {pack.cards.map((card, index) => {
                     return (
                       <View key={index} style={styles.cardSleeve}>
@@ -105,7 +109,15 @@ export default Binder;
 
 const styles = StyleSheet.create({
   container: {
-    // flexDirection: 'row'
+  },
+  packNameContainer: {
+    position: 'relative',
+    marginTop: 8,
+    marginHorizontal: 15
+  },
+  packName: {
+    fontWeight: '700',
+    fontSize: 22
   },
   cardSleeve: {
     margin: 15
@@ -118,6 +130,24 @@ const styles = StyleSheet.create({
     height: 200,
     width: 150,
     overflow: 'hidden'
+  },
+  line: {
+    position: 'absolute',
+    bottom: -2,
+    left: 18,
+    zIndex: -1,
+    width: 76,
+    height: 1.8,
+    backgroundColor: 'darkgray',
+  },
+  lineTwo: {
+    position: 'absolute',
+    bottom: -7,
+    left: 7,
+    zIndex: -1,
+    width: 56,
+    height: 1.8,
+    backgroundColor: 'darkgray',
   },
   image: {
     width: '100%',
