@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, ImageBackground, Dimensions } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { auth } from '../utils/firebase';
-import { color } from 'react-native-reanimated';
 
 const MainScreen = () => {
     const navigation = useNavigation();
@@ -24,31 +23,36 @@ const MainScreen = () => {
         navigation.setOptions({
             title: '',
             headerTransparent: true,
-            headerLeft: () => (user ? <TouchableOpacity onPress={() => { navigation.dispatch(DrawerActions.openDrawer('Drawer')) }}><MaterialIcons name='menu' size={40} color='black' style={styles.menu} /></TouchableOpacity> : <View></View>),
-            // headerRight: () => (<MaterialIcons name='settings' size={24} color='black' />)
-            // <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
+            headerStyle: {
+                height: 200
+            },
+            headerLeft: () => (
+                user ? (
+                    <View style={styles.hamTextContainer}>
+                        <Text style={styles.loggedContentText}>Hi {user.displayName} &#x1F44B;</Text>
+                        <Text style={styles.loggedContentSubtext}>Welcome back!</Text>
+                    </View>
+                ) : null
+            ),
+            headerRight: () => (
+                user ? (
+                    <View style={styles.hamContainer}>
+                        <TouchableOpacity onPress={() => { navigation.dispatch(DrawerActions.openDrawer('Drawer')) }}>
+                            <View style={styles.circle}>
+                                <MaterialIcons name='menu' size={40} color='black' />
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                ) : null
+            ),
         });
-    }, [user])
+    }, [user]);
 
     return (
         <View style={styles.container}>
-            <ImageBackground style={styles.backgroundImage} source={require('../assets/mountain.png')}  >
-                <View style={[styles.bck]} />
-                <View style={[styles.bckTwo]} />
-            </ImageBackground>
             {user ? (
                 <View>
-                    <View style={styles.loggedHeaderContainer}>
-                        <Text style={styles.loggedHeaderText}>Binder</Text>
-                        <Text style={styles.loggedHeaderText}>Packs</Text>
-                    </View>
                     <View style={styles.loggedContentContainer}>
-                            <Text style={styles.loggedContentText}>Hello {user.displayName},</Text>
-                        {/* <View style={styles.buttonContainer}>
-                            <TouchableOpacity onPress={() => navigation.navigate('Packs')} style={styles.button}>
-                                <Text style={styles.buttonText}>Open Packs</Text>
-                            </TouchableOpacity>
-                        </View> */}
                     </View>
                 </View>
             ) : (
@@ -75,10 +79,16 @@ export default MainScreen;
 
 const styles = StyleSheet.create({
     container: {
-        // justifyContent: 'flex-end',
-        paddingTop: '25%',
+        backgroundColor: '#2e2828',
         height: '100%',
-        paddingBottom: '30%',
+        paddingBottom: '30%'
+    },
+    hamContainer: {
+        // marginTop: 34,
+        marginRight: 30,
+    },
+    hamTextContainer: {
+        marginLeft: 30
     },
     headerContainer: {
         position: 'absolute',
@@ -86,32 +96,25 @@ const styles = StyleSheet.create({
         left: 0,
         padding: 20,
     },
-    loggedHeaderContainer: {
-        // backgroundColor: 'beige',
-        paddingTop: 17,
-        paddingBottom: 14,
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        borderBottomWidth: 2,
-        borderBottomColor: 'gray'
-    },
-    loggedHeaderText: {
-        fontSize: 17,
-        fontWeight: '700',
-        // backgroundColor: 'red',
-        paddingHorizontal: 32,
-        paddingVertical: 12
-    },
     loggedContentContainer: {
-        backgroundColor: 'red',
-        height: '50%'
+        // backgroundColor: 'gray',
+        // height: '100%',
+        padding: 30
     },
     loggedContentText: {
         fontSize: 28,
+        fontWeight: '200',
+        color: '#fef4f4'
+    },
+    loggedContentSubtext: {
+        fontSize: 35,
         fontWeight: '700',
-        paddingTop: 70,
-        paddingBottom: 20,
-        paddingHorizontal: 20
+        marginRight: -100,
+        color: '#fef4f4'
+    },
+    headerLeftContainer: {
+        flexDirection: 'row',
+        alignItems: 'center'
     },
     headerMain: {
         fontSize: 46,
@@ -141,13 +144,19 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: '#fff'
     },
-    menu: {
-        marginLeft: 15,
-    },
     backgroundImage: {
         position: 'absolute',
         top: 0,
         height: Dimensions.get('window').height,
         width: Dimensions.get('window').width,
-    }
+    },
+    circle: {
+        width: 50,
+        height: 50,
+        marginTop: 10,
+        borderRadius: 30,
+        backgroundColor: '#fef4f4',
+        alignItems: 'center',
+        justifyContent: 'center'
+      },
 });
