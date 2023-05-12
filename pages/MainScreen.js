@@ -1,8 +1,14 @@
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, ImageBackground, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { auth } from '../utils/firebase';
+import CarouselCard from '../components/CarouselCard';
+import { ScrollView } from 'react-native-gesture-handler';
+import ContentBox from '../components/ContentBox';
+
+// height: Dimensions.get('window').height,
+// width: Dimensions.get('window').width,
 
 const MainScreen = () => {
     const navigation = useNavigation();
@@ -51,9 +57,19 @@ const MainScreen = () => {
     return (
         <View style={styles.container}>
             {user ? (
-                <View>
-                    <View style={styles.loggedContentContainer}>
-                    </View>
+                <View style={styles.contentContainer}>
+                    <ScrollView horizontal={true} contentContainerStyle={styles.carouselContainer}>
+                        {/* TODO: Make Dynamic currently static amount */}
+                        <CarouselCard />
+                        <CarouselCard />
+                        <CarouselCard />
+                        <CarouselCard />
+                    </ScrollView>
+                    <Text style={styles.headerText}>Recent Packs</Text>
+                    <ContentBox />
+                    <ContentBox />
+                    <ContentBox />
+                    <ContentBox />
                 </View>
             ) : (
                 <View>
@@ -84,7 +100,6 @@ const styles = StyleSheet.create({
         paddingBottom: '30%'
     },
     hamContainer: {
-        // marginTop: 34,
         marginRight: 30,
     },
     hamTextContainer: {
@@ -96,10 +111,9 @@ const styles = StyleSheet.create({
         left: 0,
         padding: 20,
     },
-    loggedContentContainer: {
-        // backgroundColor: 'gray',
-        // height: '100%',
-        padding: 30
+    contentContainer: {
+        marginTop: 200,
+        marginHorizontal: 30,
     },
     loggedContentText: {
         fontSize: 28,
@@ -112,22 +126,16 @@ const styles = StyleSheet.create({
         marginRight: -100,
         color: '#fef4f4'
     },
-    headerLeftContainer: {
+    carouselContainer: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingVertical: 8
     },
-    headerMain: {
-        fontSize: 46,
-        fontWeight: '700',
-        color: '#fff',
-        shadowColor: '#000',
-        shadowOffset: { width: 4, height: 4 },
-        shadowOpacity: .5,
-        shadowRadius: 20
-    },
-    headerSub: {
-        fontSize: 16,
-        paddingLeft: 14
+    headerText: {
+        fontSize: 23,
+        fontWeight: '500',
+        color: '#fef4f4',
+        marginVertical: 24
     },
     button: {
         alignSelf: 'center',
@@ -144,12 +152,6 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: '#fff'
     },
-    backgroundImage: {
-        position: 'absolute',
-        top: 0,
-        height: Dimensions.get('window').height,
-        width: Dimensions.get('window').width,
-    },
     circle: {
         width: 50,
         height: 50,
@@ -158,5 +160,5 @@ const styles = StyleSheet.create({
         backgroundColor: '#fef4f4',
         alignItems: 'center',
         justifyContent: 'center'
-      },
+    }
 });
