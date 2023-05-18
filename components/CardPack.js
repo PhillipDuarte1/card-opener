@@ -22,6 +22,8 @@ const CardPack = ({ packName }) => {
               totalRate += card.rate;
             }
 
+            const timestamp = Date.now();
+
             for (let i = 0; i < 5; i++) {
               const randomNumber = Math.random() * 100;
               let cardType = 'common';
@@ -43,7 +45,6 @@ const CardPack = ({ packName }) => {
               let cardExists = false;
               let existingCard;
               for (const card of collectionArray) {
-                // console.log(card)
                 if (card.id === selectedCard.id) {
                   cardExists = true;
                   existingCard = card;
@@ -57,6 +58,8 @@ const CardPack = ({ packName }) => {
               } else {
                 selectedCard.count = selectedCards.filter(card => card.id === selectedCard.id).length + 1;
               }
+
+              selectedCard.lastAcquired = timestamp + i;
               selectedCards.push(selectedCard);
             }
 

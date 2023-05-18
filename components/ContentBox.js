@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const ContentBox = () => {
+const ContentBox = ({ margin }) => {
     return (
-        <View style={styles.contentBoxContainer}>
+        <View style={[styles.contentBoxContainer, {marginVertical: margin}]}>
             <View style={styles.icon}></View>
             <View style={styles.contentBoxTextContainer}>
                 <Text style={styles.contentBoxText}>Text</Text>

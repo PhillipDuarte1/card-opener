@@ -58,7 +58,7 @@ const MainScreen = () => {
         <View style={styles.container}>
             {user ? (
                 <View style={styles.contentContainer}>
-                    <ScrollView horizontal={true} contentContainerStyle={styles.carouselContainer}>
+                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.carouselContainer}>
                         {/* TODO: Make Dynamic currently static amount */}
                         <CarouselCard />
                         <CarouselCard />
@@ -66,8 +66,8 @@ const MainScreen = () => {
                         <CarouselCard />
                     </ScrollView>
                     <Text style={styles.headerText}>Recent Packs</Text>
-                    <ContentBox />
-                    <ContentBox />
+                    <ContentBox margin={5} />
+                    <ContentBox margin={10} />
                     <ContentBox />
                     <ContentBox />
                 </View>

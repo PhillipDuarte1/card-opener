@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Image, TextInput, Button, StyleSheet, Alert, Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { auth, storage } from '../utils/firebase';
+import { auth } from '../utils/firebase';
 import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 
