@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { storage } from '../utils/firebase';
 import useCardPacks from '../hooks/useCardPacks';
 
-const Binder = () => {
+const Binder = ({ searchQuery, ordering }) => {
   const { packs, loading } = useCardPacks();
   const [message, setMessage] = useState(null);
   const [cards, setCards] = useState([]);
@@ -18,7 +18,19 @@ const Binder = () => {
         return [];
       });
 
-      const sortedCards = allCards.sort((a, b) => b.lastAcquired - a.lastAcquired);
+      const filteredCards = allCards.filter(card =>
+        card.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+      const sortedCards = filteredCards.sort((a, b) => {
+        if (ordering === 'lastAcquired') {
+          return b.lastAcquired - a.lastAcquired;
+        } else if (ordering === 'name') {
+          return a.name.localeCompare(b.name);
+        }
+        return 0;
+      });
+
       setCards(sortedCards);
 
       const imageValues = sortedCards.map((card) => card.image);
@@ -34,7 +46,7 @@ const Binder = () => {
         setImageURLs(imageURLMap);
       });
     }
-  }, [loading, packs]);
+  }, [loading, packs, searchQuery, ordering]);
 
   useEffect(() => {
     if (cards.length === 0) {
@@ -56,7 +68,7 @@ const Binder = () => {
             <Text>{message}</Text>
           </View>
         ) : (
-          <ScrollView style={styles.scrollView}>
+          <ScrollView contentContainerStyle={styles.cardContainer}>
             {cards.map((card, index) => {
               return (
                 <View key={index} style={styles.cardSleeve}>
@@ -87,18 +99,14 @@ export default Binder;
 
 const styles = StyleSheet.create({
   container: {
+    height: '100%'
   },
-  packNameContainer: {
-    position: 'relative',
-    marginTop: 8,
-    marginHorizontal: 15
-  },
-  packName: {
-    fontWeight: '700',
-    fontSize: 22
+  cardContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-evenly'
   },
   cardSleeve: {
-    margin: 15
   },
   card: {
     backgroundColor: '#fff',
@@ -112,8 +120,5 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%'
-  },
-  scrollView: {
-    flexDirection: 'row'
   }
 });
