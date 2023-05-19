@@ -1,61 +1,17 @@
-import { DrawerActions, useNavigation } from '@react-navigation/native';
-import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
-import { auth } from '../utils/firebase';
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import CarouselCard from '../components/CarouselCard';
 import { ScrollView } from 'react-native-gesture-handler';
 import ContentBox from '../components/ContentBox';
+import Header from '../components/Header';
+import useUser from '../hooks/useUser';
 
-// height: Dimensions.get('window').height,
-// width: Dimensions.get('window').width,
-
-const MainScreen = () => {
-    const navigation = useNavigation();
-    const [user, setUser] = useState(null);
-
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((user) => {
-            if (user) {
-                setUser(user);
-            } else {
-                setUser(null);
-            }
-        });
-        return () => unsubscribe();
-    }, []);
-
-    useEffect(() => {
-        navigation.setOptions({
-            title: '',
-            headerTransparent: true,
-            headerStyle: {
-                height: 200
-            },
-            headerLeft: () => (
-                user ? (
-                    <View style={styles.hamTextContainer}>
-                        <Text style={styles.loggedContentText}>Hi {user.displayName} &#x1F44B;</Text>
-                        <Text style={styles.loggedContentSubtext}>Welcome back!</Text>
-                    </View>
-                ) : null
-            ),
-            headerRight: () => (
-                user ? (
-                    <View style={styles.hamContainer}>
-                        <TouchableOpacity onPress={() => { navigation.dispatch(DrawerActions.openDrawer('Drawer')) }}>
-                            <View style={styles.circle}>
-                                <MaterialIcons name='menu' size={40} color='black' />
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                ) : null
-            ),
-        });
-    }, [user]);
+const MainScreen = ({ navigation }) => {
+    const user = useUser();
 
     return (
         <View style={styles.container}>
+            <Header navigation={navigation} user={user} />
             {user ? (
                 <View style={styles.contentContainer}>
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.carouselContainer}>

@@ -18,6 +18,8 @@ export default function App() {
   const Stack = createStackNavigator();
   const Drawer = createDrawerNavigator();
 
+  const iconColor = '#fef4f4';
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
@@ -62,41 +64,41 @@ export default function App() {
         <ScrollView style={styles.drawerItemContainer}>
           <DrawerItem
             label='Home'
-            icon={() => (<FontAwesome name='home' size={24} color='black' />)}
+            icon={() => (<FontAwesome name='home' size={24} color={iconColor} />)}
             onPress={() => props.navigation.navigate('Home')}
-            style={[styles.item, styles.firstChild]}
+            labelStyle={[styles.item, styles.firstChild]}
           />
           <DrawerItem
             label='Packs'
-            icon={() => (<MaterialCommunityIcons name='cards' size={24} color='black' />)}
+            icon={() => (<MaterialCommunityIcons name='cards' size={24} color={iconColor} />)}
             onPress={() => props.navigation.navigate('Packs')}
-            style={styles.item}
+            labelStyle={styles.item}
           />
           <DrawerItem
             label='Binder'
-            icon={() => (<MaterialCommunityIcons name="view-grid" size={24} color="black" />)}
+            icon={() => (<MaterialCommunityIcons name='view-grid' size={24} color={iconColor} />)}
             onPress={() => props.navigation.navigate('Binder')}
-            style={styles.item}
+            labelStyle={styles.item}
           />
           <DrawerItem
             label='Add Pack'
-            icon={() => (<MaterialIcons name="add-to-photos" size={24} color="black" />)}
+            icon={() => (<MaterialIcons name='add-to-photos' size={24} color={iconColor} />)}
             onPress={() => props.navigation.navigate('AddPack')}
-            style={styles.item}
+            labelStyle={styles.item}
           />
           <DrawerItem
             label='Settings'
-            icon={() => (<FontAwesome name="gear" size={24} color="black" />)}
+            icon={() => (<FontAwesome name='gear' size={24} color={iconColor} />)}
             onPress={() => props.navigation.navigate('Settings')}
-            style={styles.item}
+            labelStyle={styles.item}
           />
         </ScrollView>
         <View style={styles.footer}>
           <DrawerItem
             label='Logout'
-            icon={() => (<MaterialCommunityIcons name="logout" size={24} color="black" />)}
+            icon={() => (<MaterialCommunityIcons name='logout' size={24} color={iconColor} />)}
             onPress={() => auth.signOut().then(() => { props.navigation.navigate('Home') })}
-            style={[styles.item, styles.lastChild]}
+            labelStyle={[styles.item, styles.lastChild]}
           />
         </View>
       </View>
@@ -126,7 +128,6 @@ export default function App() {
           // options={{ headerShown: false }}
           component={AddPackScreen}
         />
-        {/* Settings */}
       </Drawer.Navigator>
     </NavigationContainer>
   );
@@ -134,7 +135,8 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    height: '100%'
+    height: '100%',
+    backgroundColor: '#2e2828'
   },
   headerContainer: {
   },
@@ -155,15 +157,16 @@ const styles = StyleSheet.create({
     borderBottomColor: 'lightgray',
   },
   userEmail: {
-    color: 'gray'
+    color: '#fef4f4'
   },
   userUsername: {
+    color: '#fef4f4',
     fontWeight: '700',
     fontSize: 22,
     marginBottom: 2
   },
   item: {
-    // backgroundColor: 'red',
+    color: 'white'
   },
   footer: {
     paddingTop: 10,

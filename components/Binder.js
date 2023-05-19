@@ -113,8 +113,8 @@ const styles = StyleSheet.create({
     borderColor: '#6C757D',
     borderRadius: 8,
     borderWidth: 2,
-    height: 200,
-    width: 150,
+    height: 290,
+    width: 190,
     overflow: 'hidden'
   },
   image: {
