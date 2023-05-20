@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, Dimensions, ScrollView } from 'react-native';
 import { storage } from '../utils/firebase';
 import useCardPacks from '../hooks/useCardPacks';
+import Loading from './Loading';
 
 const { width, height } = Dimensions.get('window');
 
@@ -11,6 +12,7 @@ const Binder = ({ searchQuery, ordering }) => {
   const [cards, setCards] = useState([]);
   const [imageURLs, setImageURLs] = useState({});
   const [orderBy, sortOrder] = ordering.split(':');
+  const [isLoading, setIsLoading] = useState([]);
 
   useEffect(() => {
     if (!loading) {
@@ -38,16 +40,26 @@ const Binder = ({ searchQuery, ordering }) => {
 
       const imageValues = sortedCards.map((card) => card.image);
       const imagePromises = imageValues.map((card) => {
-        return storage.ref(`cards/${card}`).getDownloadURL();
+        return storage.ref(`cards/${card}`).getDownloadURL()
+          .then(url => {
+            const updatedLoading = [...isLoading];
+            updatedLoading[imageValues.indexOf(card)] = false;
+            setIsLoading(updatedLoading);
+
+            return url;
+          });
       });
 
-      Promise.all(imagePromises).then((urls) => {
-        const imageURLMap = imageValues.reduce((acc, image, index) => {
-          acc[image] = urls[index];
-          return acc;
-        }, {});
-        setImageURLs(imageURLMap);
-      });
+      setIsLoading(new Array(sortedCards.length).fill(true));
+
+      Promise.all(imagePromises)
+        .then((urls) => {
+          const imageURLMap = imageValues.reduce((acc, image, index) => {
+            acc[image] = urls[index];
+            return acc;
+          }, {});
+          setImageURLs(imageURLMap);
+        });
     }
   }, [loading, packs, searchQuery, ordering]);
 
@@ -63,39 +75,36 @@ const Binder = ({ searchQuery, ordering }) => {
 
   return (
     <View style={styles.container}>
-      {loading ? (
+      {message ? (
         <View>
-          <Text>Loading binder...</Text>
+          <Text style={styles.message}>{message}</Text>
         </View>
       ) : (
-        message ? (
-          <View>
-            <Text style={styles.message}>{message}</Text>
-          </View>
-        ) : (
-          <ScrollView contentContainerStyle={[styles.cardContainer, { height: totalHeight }]}>
-            {cards.map((card, index) => {
-              return (
-                <View key={index} style={styles.cardSleeve}>
-                  <View style={styles.card}>
-                    {card && (
-                      <Image
-                        source={{ uri: imageURLs[card.image] }}
-                        style={styles.image}
-                        resizeMode='cover'
-                      />
-                    )}
-                  </View>
-                  <View>
-                    <Text>{card.name}</Text>
-                    <Text>{card.count}</Text>
-                  </View>
+        <ScrollView contentContainerStyle={[styles.cardContainer, { height: totalHeight }]}>
+          {cards.map((card, index) => {
+            return (
+              <View key={index} style={styles.cardSleeve}>
+                <View style={styles.card}>
+                  {isLoading[index] ? (
+                    <Loading size='small' color='#000' />
+                  ) : (
+                    <Image
+                      source={{ uri: imageURLs[card.image] }}
+                      style={styles.image}
+                      resizeMode='cover'
+                    />
+                  )}
                 </View>
-              );
-            })}
-          </ScrollView>
-        )
-      )}
+                <View>
+                  <Text>{card.name}</Text>
+                  <Text>{card.count}</Text>
+                </View>
+              </View>
+            );
+          })}
+        </ScrollView>
+      )
+      }
     </View>
   );
 };

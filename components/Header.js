@@ -33,11 +33,7 @@ const Header = ({ navigation, user }) => {
             },
             headerRight: () => {
                 if (route.name === 'Main' && !user) {
-                    return (
-                        <View>
-                            
-                        </View>
-                    )
+                    return null;
                 } else {
                     return (
                         <View style={styles.hamContainer}>

@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet, Image, Text, View, TouchableOpacity, Animated, Easing, Dimensions, PanResponder } from 'react-native';
 import { storage } from '../utils/firebase';
+import Loading from './Loading';
 
 const { width } = Dimensions.get('window');
 
 const Card = ({ card }) => {
   const [imageURL, setImageURL] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [flipped, setFlipped] = useState(false);
   const [flipAnimation] = useState(new Animated.Value(0));
   const [position] = useState(new Animated.ValueXY());
@@ -14,6 +16,8 @@ const Card = ({ card }) => {
   useEffect(() => {
     storage.ref(`cards/${card.image}`).getDownloadURL().then((url) => {
       setImageURL(url);
+    }).then(() => {
+      setLoading(false);
     });
     shine();
   }, []);
@@ -126,17 +130,19 @@ const Card = ({ card }) => {
     >
       <TouchableOpacity onPress={flipCard} activeOpacity={1} style={[styles.card, animatedStyle]}>
         <Animated.View style={[styles.shine, shineStyle]} />
+        {loading && (
+          <Loading color='#000' size='large' />
+        )}
         <Image
           source={{ uri: imageURL }}
           style={styles.image}
           resizeMode='cover'
         />
-        {flipped && (
+        {flipped ? (
           <View style={styles.backside}>
             <Text style={styles.backsideName}>{card.name}</Text>
           </View>
-        )}
-        {!flipped && (
+        ) : (
           <View style={styles.textContainer}>
             <Text style={styles.rarity}>{card.type}</Text>
             <Text style={styles.name}>{card.name}</Text>
@@ -167,6 +173,7 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 6
   },
+  // adjust loading component to fit with padding
   backside: {
     position: 'absolute',
     bottom: 0,

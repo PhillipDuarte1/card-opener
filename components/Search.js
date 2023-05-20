@@ -27,6 +27,7 @@ const Search = ({ onSearch, onOrder }) => {
     };
 
     const togglePickerVisibility = () => {
+        setPickerVisible(false);
         setFilterVisible(!filterVisible);
     };
 
@@ -48,7 +49,7 @@ const Search = ({ onSearch, onOrder }) => {
                         <FontAwesome name='search' size={24} color='#2e2828' />
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={togglePickerVisibility} style={styles.plusIcon}>
+                <TouchableOpacity onPress={togglePickerVisibility} style={styles.filterIcon}>
                     <MaterialCommunityIcons name='filter-variant' size={32} color='#fef4f4' />
                 </TouchableOpacity>
             </View>
@@ -113,8 +114,9 @@ const styles = StyleSheet.create({
     searchIcon: {
         padding: 6
     },
-    plusIcon: {
+    filterIcon: {
         marginLeft: 20,
+        marginRight: 4,
         padding: 6
     },
     pickerContainer: {
@@ -139,8 +141,7 @@ const styles = StyleSheet.create({
         // borderWidth: 1,
         // borderRadius: 12,
         marginTop: 8,
-        paddingRight: 10,
-        paddingLeft: 18,
+        paddingHorizontal: 18,
         paddingVertical: 6
     },
     sortButtonText: {
