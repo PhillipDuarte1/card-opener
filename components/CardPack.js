@@ -69,7 +69,7 @@ const CardPack = ({ packName }) => {
             setCards([]);
             setCards(selectedCards);
           }).then(() => {
-            
+
           });
         });
       }

@@ -49,7 +49,7 @@ const Binder = ({ searchQuery, ordering }) => {
         setImageURLs(imageURLMap);
       });
     }
-  }, [packs, searchQuery, ordering]);
+  }, [loading, packs, searchQuery, ordering]);
 
   useEffect(() => {
     if (cards.length === 0) {
@@ -59,8 +59,7 @@ const Binder = ({ searchQuery, ordering }) => {
     }
   }, [cards]);
 
-  // Calculate the total height of the cardContainer
-  const totalHeight = height + cards.length * 60; // Assuming each card has a height of 300
+  const totalHeight = height + cards.length + 300;
 
   return (
     <View style={styles.container}>
@@ -105,7 +104,8 @@ export default Binder;
 
 const styles = StyleSheet.create({
   container: {
-    height: '100%'
+    height: '100%',
+    zIndex: -1
   },
   cardContainer: {
     flexDirection: 'row',
