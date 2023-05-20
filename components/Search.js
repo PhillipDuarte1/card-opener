@@ -1,24 +1,35 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import DropDownPicker from 'react-native-dropdown-picker';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 
 const Search = ({ onSearch, onOrder }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [ordering, setOrdering] = useState('lastAcquired');
+    const [sortOrder, setSortOrder] = useState('asc');
     const [pickerVisible, setPickerVisible] = useState(false);
+    const [filterVisible, setFilterVisible] = useState(false);
+
+    const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+
+    const items = [
+        { label: 'Most Recent', value: 'lastAcquired' },
+        { label: 'Name', value: 'name' }
+    ]
 
     const handleSearch = () => {
+        onOrder(ordering + ':' + newSortOrder);
         onSearch(searchQuery);
     };
 
     const handleOrder = () => {
-        onOrder(ordering); // Pass the ordering value to onOrder function
+        setSortOrder(newSortOrder);
     };
 
     const togglePickerVisibility = () => {
-        setPickerVisible(!pickerVisible);
+        setFilterVisible(!filterVisible);
     };
+
 
     return (
         <View style={styles.container}>
@@ -30,6 +41,8 @@ const Search = ({ onSearch, onOrder }) => {
                         onChangeText={setSearchQuery}
                         placeholder='Search By Name'
                         placeholderTextColor='#2e2828'
+                        onSubmitEditing={handleSearch}
+                        returnKeyType='search'
                     />
                     <TouchableOpacity onPress={handleSearch} style={styles.searchIcon}>
                         <FontAwesome name='search' size={24} color='#2e2828' />
@@ -39,23 +52,25 @@ const Search = ({ onSearch, onOrder }) => {
                     <MaterialCommunityIcons name='filter-variant' size={32} color='#fef4f4' />
                 </TouchableOpacity>
             </View>
-            {pickerVisible && (
+            {filterVisible && (
                 <View style={styles.pickerContainer}>
-                    <Picker
-                        selectedValue={ordering}
-                        onValueChange={(itemValue) => setOrdering(itemValue)}
-                        itemStyle={styles.picker}
-                        onDonePress={togglePickerVisibility}
-                    >
-                        <Picker.Item label='Last Acquired' value='lastAcquired' />
-                        <Picker.Item label='Name' value='name' />
-                    </Picker>
+                    <DropDownPicker
+                        items={items}
+                        defaultValue={ordering}
+                        style={styles.pickerStyle}
+                        textStyle={{ fontSize: 18 }}
+                        // dropDownContainerStyle={{zIndex: 5}}
+                        onChangeItem={(item) => setOrdering(item.value)}
+                        open={pickerVisible}
+                        setOpen={setPickerVisible}
+                        placeholder='Select a filter...'
+                    />
                     <View style={styles.filterButtonsContainer}>
-                        <TouchableOpacity onPress={handleOrder} style={styles.orderButton}>
-                            <Text style={styles.orderButtonText}>Order By</Text>
-                        </TouchableOpacity>
                         <TouchableOpacity onPress={handleOrder} style={styles.sortButton}>
-                            <Text style={styles.sortButtonText}>Sort By</Text>
+                            <Text style={styles.sortButtonText}>
+                                Sort By:
+                            </Text>
+                            <Text style={styles.sortButtonIcon}>{sortOrder === 'asc' ? <MaterialCommunityIcons name='arrow-down-thin' size={24} color='#fef4f4' /> : <MaterialCommunityIcons name='arrow-up-thin' size={24} color='#fef4f4' />}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -105,34 +120,35 @@ const styles = StyleSheet.create({
     pickerContainer: {
         width: '100%'
     },
-    picker: {
-        color: '#fef4f4'
+    pickerStyle: {
+        backgroundColor: '#fef4f4',
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 18,
+        paddingHorizontal: 16,
+        paddingVertical: 2
     },
     filterButtonsContainer: {
         flexDirection: 'row'
     },
-    orderButton: {
-        backgroundColor: '#fef4f4',
-        borderRadius: 18,
-        marginTop: 8,
-        paddingHorizontal: 16,
-        paddingVertical: 12,
-    },
     sortButton: {
-        backgroundColor: '#fef4f4',
-        borderRadius: 18,
+        flexDirection: 'row',
+        alignItems: 'center',
+        // backgroundColor: '#fef4f4',
+        borderColor: 'gray',
+        // borderWidth: 1,
+        // borderRadius: 12,
         marginTop: 8,
-        paddingHorizontal: 16,
-        paddingVertical: 12
-    },
-    orderButtonText: {
-        fontSize: 18,
-        color: '#2e2828',
-        textAlign: 'center'
+        paddingRight: 10,
+        paddingLeft: 18,
+        paddingVertical: 6
     },
     sortButtonText: {
-        fontSize: 18,
-        color: '#2e2828',
+        fontSize: 12,
+        color: '#fef4f4',
         textAlign: 'center'
+    },
+    sortButtonIcon: {
+        marginLeft: 5
     }
 });

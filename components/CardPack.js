@@ -68,6 +68,8 @@ const CardPack = ({ packName }) => {
             }
             setCards([]);
             setCards(selectedCards);
+          }).then(() => {
+            
           });
         });
       }
@@ -76,7 +78,7 @@ const CardPack = ({ packName }) => {
 
   return (
     <View style={styles.container}>
-      <Button onPress={openPack} title="Open Card Pack" />
+      <Button onPress={openPack} title='Open Card Pack' />
       <View style={styles.cardContainer}>
         {cards.map((card, index) => (
           <Card key={index} card={card} />

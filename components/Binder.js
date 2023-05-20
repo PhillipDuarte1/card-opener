@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, Dimensions, ScrollView } from 'react-native';
 import { storage } from '../utils/firebase';
 import useCardPacks from '../hooks/useCardPacks';
+
+const { width, height } = Dimensions.get('window');
 
 const Binder = ({ searchQuery, ordering }) => {
   const { packs, loading } = useCardPacks();
   const [message, setMessage] = useState(null);
   const [cards, setCards] = useState([]);
   const [imageURLs, setImageURLs] = useState({});
+  const [orderBy, sortOrder] = ordering.split(':');
 
   useEffect(() => {
     if (!loading) {
@@ -23,10 +26,10 @@ const Binder = ({ searchQuery, ordering }) => {
       );
 
       const sortedCards = filteredCards.sort((a, b) => {
-        if (ordering === 'lastAcquired') {
-          return b.lastAcquired - a.lastAcquired;
-        } else if (ordering === 'name') {
-          return a.name.localeCompare(b.name);
+        if (orderBy === 'lastAcquired') {
+          return sortOrder === 'asc' ? a.lastAcquired - b.lastAcquired : b.lastAcquired - a.lastAcquired;
+        } else if (orderBy === 'name') {
+          return sortOrder === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
         }
         return 0;
       });
@@ -46,7 +49,7 @@ const Binder = ({ searchQuery, ordering }) => {
         setImageURLs(imageURLMap);
       });
     }
-  }, [loading, packs, searchQuery, ordering]);
+  }, [packs, searchQuery, ordering]);
 
   useEffect(() => {
     if (cards.length === 0) {
@@ -55,6 +58,9 @@ const Binder = ({ searchQuery, ordering }) => {
       setMessage(null);
     }
   }, [cards]);
+
+  // Calculate the total height of the cardContainer
+  const totalHeight = height + cards.length * 60; // Assuming each card has a height of 300
 
   return (
     <View style={styles.container}>
@@ -65,10 +71,10 @@ const Binder = ({ searchQuery, ordering }) => {
       ) : (
         message ? (
           <View>
-            <Text>{message}</Text>
+            <Text style={styles.message}>{message}</Text>
           </View>
         ) : (
-          <ScrollView contentContainerStyle={styles.cardContainer}>
+          <ScrollView contentContainerStyle={[styles.cardContainer, { height: totalHeight }]}>
             {cards.map((card, index) => {
               return (
                 <View key={index} style={styles.cardSleeve}>
@@ -106,8 +112,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-evenly'
   },
-  cardSleeve: {
-  },
+  cardSleeve: {},
   card: {
     backgroundColor: '#fff',
     borderColor: '#6C757D',
@@ -120,5 +125,10 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%'
+  },
+  message: {
+    fontSize: 18,
+    color: '#fef4f4',
+    alignSelf: 'center'
   }
 });
