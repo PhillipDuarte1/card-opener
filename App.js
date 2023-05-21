@@ -6,7 +6,7 @@ import { createDrawerNavigator, DrawerItem } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { auth } from './utils/firebase';
 import MainScreen from './pages/MainScreen';
-import PacksScreen from './pages/PacksSreen';
+import PacksScreen from './pages/PacksScreen';
 import LoginScreen from './pages/LoginScreen';
 import RegisterScreen from './pages/RegisterScreen';
 import BinderScreen from './pages/BinderScreen';
@@ -115,17 +115,14 @@ export default function App() {
         />
         <Drawer.Screen
           name='Packs'
-          // options={{ headerShown: false }}
           component={PacksScreen}
         />
         <Drawer.Screen
           name='Binder'
-          // options={{ headerShown: false }}
           component={BinderScreen}
         />
         <Drawer.Screen
           name='AddPack'
-          // options={{ headerShown: false }}
           component={AddPackScreen}
         />
       </Drawer.Navigator>
