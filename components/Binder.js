@@ -27,13 +27,13 @@ const Binder = ({ searchQuery, ordering }) => {
         card.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
 
-      const sortedCards = filteredCards.sort((a, b) => {
-        if (orderBy === 'lastAcquired') {
-          return sortOrder === 'asc' ? a.lastAcquired - b.lastAcquired : b.lastAcquired - a.lastAcquired;
-        } else if (orderBy === 'name') {
-          return sortOrder === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+      const sortedCards = filteredCards.sort((card1, card2) => {
+        if (orderBy === 'name') {
+          return sortOrder === 'asc' ? card1.name.localeCompare(card2.name) : card2.name.localeCompare(card1.name);
+        } else if (orderBy === 'lastAcquired') {
+          return sortOrder === 'asc' ? card1.lastAcquired - card2.lastAcquired : card2.lastAcquired - card1.lastAcquired;
         }
-        return 0;
+        return card1.name.localeCompare(card2.name);
       });
 
       setCards(sortedCards);
@@ -103,8 +103,7 @@ const Binder = ({ searchQuery, ordering }) => {
             );
           })}
         </ScrollView>
-      )
-      }
+      )}
     </View>
   );
 };

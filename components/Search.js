@@ -61,7 +61,7 @@ const Search = ({ onSearch, onOrder }) => {
                         style={styles.pickerStyle}
                         textStyle={{ fontSize: 18 }}
                         // dropDownContainerStyle={{zIndex: 5}}
-                        onChangeItem={(item) => setOrdering(item.value)}
+                        onSelectItem={(item) => setOrdering(item.value)}
                         open={pickerVisible}
                         setOpen={setPickerVisible}
                         placeholder='Select a filter...'
