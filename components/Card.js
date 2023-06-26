@@ -173,7 +173,6 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 6
   },
-  // adjust loading component to fit with padding
   backside: {
     position: 'absolute',
     bottom: 0,

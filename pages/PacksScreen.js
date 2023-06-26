@@ -1,18 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import useUser from '../hooks/useUser';
 import CardPack from '../components/CardPack';
 import Header from '../components/Header';
-import useCardPacks from '../hooks/useCardPacks';
-import useUser from '../hooks/useUser';
+import { db } from '../utils/firebase';
 
 const PacksScreen = ({ navigation }) => {
-    const { packs, loading } = useCardPacks();
+    const [packs, setPacks] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchPacks = async () => {
+            db.ref('packs').on('value', (snapshot) => {
+                const allPacks = snapshot.val();
+                if (allPacks) {
+                    const packArray = Object.entries(allPacks);
+                    setPacks(packArray);
+                }
+                setLoading(false);
+            });
+        };
+
+        fetchPacks();
+    }, []);
 
     const user = useUser();
 
-    packs.map((pack, i) => {
-        console.log(pack[0])
-    })
     return (
         <View style={styles.container}>
             <Header navigation={navigation} user={user} />
@@ -20,9 +33,7 @@ const PacksScreen = ({ navigation }) => {
                 {loading ? (
                     <Text>Loading packs...</Text>
                 ) : (
-                    packs.map((pack, i) => (
-                        <CardPack key={i} packName={pack[0]} />
-                    ))
+                    packs.map((pack, i) => <CardPack key={i} packName={pack[0]} />)
                 )}
             </View>
         </View>
