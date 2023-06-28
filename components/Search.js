@@ -9,6 +9,7 @@ const Search = ({ onSearch, onOrder }) => {
     const [sortOrder, setSortOrder] = useState('asc');
     const [pickerVisible, setPickerVisible] = useState(false);
     const [filterVisible, setFilterVisible] = useState(false);
+    const [label, setLabel] = useState('Select a filter...');
 
     const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
 
@@ -61,10 +62,13 @@ const Search = ({ onSearch, onOrder }) => {
                         style={styles.pickerStyle}
                         textStyle={{ fontSize: 18 }}
                         // dropDownContainerStyle={{zIndex: 5}}
-                        onSelectItem={(item) => setOrdering(item.value)}
+                        onSelectItem={(item) => {
+                            setOrdering(item.value);
+                            setLabel(item.label);
+                        }}
                         open={pickerVisible}
                         setOpen={setPickerVisible}
-                        placeholder='Select a filter...'
+                        placeholder={label}
                     />
                     <View style={styles.filterButtonsContainer}>
                         <TouchableOpacity onPress={handleOrder} style={styles.sortButton}>

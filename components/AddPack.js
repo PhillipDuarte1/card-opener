@@ -4,22 +4,40 @@ import { db, auth } from '../utils/firebase';
 
 const AddPack = () => {
   const [packName, setPackName] = useState('');
-  const [cardName, setCardName] = useState('');
-  const [cardType, setCardType] = useState('');
-  const [cardRate, setCardRate] = useState('');
+  const [cards, setCards] = useState([]);
 
-  const addSingleCard = () => {
+  const addCard = () => {
+    const newCard = { id: '', name: '', type: '', rate: '', count: 0 };
+    setCards((prevCards) => [...prevCards, newCard]);
+  };
+
+  const handleCardChange = (index, field, value) => {
+    const updatedCards = [...cards];
+    updatedCards[index][field] = value;
+    setCards(updatedCards);
+  };
+
+  const submitPack = () => {
     auth.onAuthStateChanged((user) => {
       if (user) {
-        const newCard = { name: cardName, type: cardType, rate: cardRate, count: 0 };
-        db.ref(`pending/${user.uid}/packs/${packName}/cards`)
-          .push(newCard)
+        const packData = {
+          id: packName,
+          cards: {},
+        };
+
+        cards.forEach((card) => {
+          const cardRef = db.ref(`pending/${user.uid}/packs/${packName}/cards`).push();
+          const cardId = cardRef.key;
+
+          card.id = cardId;
+          packData.cards[cardId] = card;
+        });
+
+        db.ref(`pending/${user.uid}/packs/${packName}`).set(packData)
           .then(() => {
             setPackName('');
-            setCardName('');
-            setCardType('');
-            setCardRate('');
-            alert('Card added to pending pack');
+            setCards([]);
+            alert('Pack Added For Review');
           })
           .catch((error) => {
             alert(error);
@@ -31,26 +49,34 @@ const AddPack = () => {
   return (
     <View>
       <TextInput
-        placeholder="Pack Name"
+        placeholder='Pack Name'
         value={packName}
         onChangeText={setPackName}
       />
-      <TextInput
-        placeholder="Card Name"
-        value={cardName}
-        onChangeText={setCardName}
-      />
-      <TextInput
-        placeholder="Card Type"
-        value={cardType}
-        onChangeText={setCardType}
-      />
-      <TextInput
-        placeholder="Card Rate"
-        value={cardRate}
-        onChangeText={setCardRate}
-      />
-      <Button onPress={addSingleCard} title="add single card to pack" />
+
+      {cards.map((card, index) => (
+        <View key={index}>
+          <TextInput
+            placeholder='Card Name'
+            value={card.name}
+            onChangeText={(value) => handleCardChange(index, 'name', value)}
+          />
+
+          <TextInput
+            placeholder='Card Type'
+            value={card.type}
+            onChangeText={(value) => handleCardChange(index, 'type', value)}
+          />
+
+          <TextInput
+            placeholder='Card Rate'
+            value={card.rate}
+            onChangeText={(value) => handleCardChange(index, 'rate', value)}
+          />
+        </View>
+      ))}
+      <Button onPress={addCard} title='Add Card' />
+      <Button onPress={submitPack} title='Submit Pack' />
     </View>
   );
 };
