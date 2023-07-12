@@ -24,7 +24,9 @@
     "react-native": "0.70.5",
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-gesture-handler": "~2.8.0",
-    "react-native-reanimated": "~2.12.0"
+    "react-native-get-random-values": "^1.9.0",
+    "react-native-reanimated": "~2.12.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
