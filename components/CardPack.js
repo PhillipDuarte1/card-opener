@@ -76,7 +76,7 @@ const CardPack = ({ packName }) => {
       <Button onPress={openPack} title='Open Card Pack' />
       <View style={styles.cardContainer}>
         {cards.map((card) => (
-          <Card key={card.uid} card={card} />
+          <Card key={card.uid} card={card} draggable={true} />
         ))}
       </View>
     </View>

@@ -5,7 +5,7 @@ import Loading from './Loading';
 
 const { width } = Dimensions.get('window');
 
-const Card = ({ card }) => {
+const Card = ({ card, draggable, size = 'default' }) => {
   const [imageURL, setImageURL] = useState(null);
   const [loading, setLoading] = useState(true);
   const [flipped, setFlipped] = useState(false);
@@ -23,7 +23,7 @@ const Card = ({ card }) => {
   }, []);
 
   const panResponder = PanResponder.create({
-    onMoveShouldSetPanResponder: () => true,
+    onMoveShouldSetPanResponder: () => draggable,
     onPanResponderMove: Animated.event([
       null,
       {
@@ -110,6 +110,9 @@ const Card = ({ card }) => {
     outputRange: ['0deg', '180deg'],
   });
 
+  const cardWidth = size === 'default' ? width * 0.8 : size.width;
+  const cardHeight = cardWidth * 1.45;
+
   const animatedStyle = {
     transform: [
       {
@@ -128,7 +131,7 @@ const Card = ({ card }) => {
       }}
       {...panResponder.panHandlers}
     >
-      <TouchableOpacity onPress={flipCard} activeOpacity={1} style={[styles.card, animatedStyle]}>
+      <TouchableOpacity onPress={flipCard} activeOpacity={1} style={[size === 'default' ? styles.cardAbsolute : styles.card, { width: cardWidth, height: cardHeight }, animatedStyle]}>
         <Animated.View style={[styles.shine, shineStyle]} />
         {loading && (
           <Loading color='#000' size='large' />
@@ -141,6 +144,7 @@ const Card = ({ card }) => {
         {flipped ? (
           <View style={styles.backside}>
             <Text style={styles.backsideName}>{card.name}</Text>
+            <Text>{card.pulledGlobalCount}</Text>
           </View>
         ) : (
           <View style={styles.textContainer}>
@@ -157,15 +161,21 @@ export default Card;
 
 const styles = StyleSheet.create({
   card: {
+    // position: 'absolute',
+    alignSelf: 'center',
+    backgroundColor: '#fff',
+    borderColor: '#6C757D',
+    borderRadius: 8,
+    borderWidth: 2,
+    overflow: 'hidden'
+  },
+  cardAbsolute: {
     position: 'absolute',
     alignSelf: 'center',
     backgroundColor: '#fff',
     borderColor: '#6C757D',
     borderRadius: 8,
     borderWidth: 2,
-    height: 447.5,
-    width: width * 0.8,
-    marginBottom: 5,
     overflow: 'hidden'
   },
   image: {
