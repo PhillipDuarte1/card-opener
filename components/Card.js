@@ -91,7 +91,6 @@ const Card = ({ card, draggable, size = 'default' }) => {
     opacity: card.type === 'common' || card.type === 'uncommon' ? 0 : opacity,
   };
 
-
   const flipCard = () => {
     Animated.timing(
       flipAnimation,
@@ -136,20 +135,59 @@ const Card = ({ card, draggable, size = 'default' }) => {
         {loading && (
           <Loading color='#000' size='large' />
         )}
-        <Image
-          source={{ uri: imageURL }}
-          style={styles.image}
-          resizeMode='cover'
-        />
         {flipped ? (
-          <View style={styles.backside}>
-            <Text style={styles.backsideName}>{card.name}</Text>
-            <Text>{card.pulledGlobalCount}</Text>
+          <View style={styles.backContainer}>
+            <Image
+              source={{ uri: imageURL }}
+              style={[styles.image, styles.backImage]}
+              resizeMode='cover'
+            />
+            <View style={styles.backContent}>
+              <View style={styles.statsContainer}>
+                <View style={styles.statsColumn}>
+                  <View style={styles.statItem}>
+                    <Text style={styles.statLabel}>Author:</Text>
+                    <Text style={styles.statValue}>{card.author}</Text>
+                  </View>
+                  <View style={styles.statItem}>
+                    <Text style={styles.statLabel}>Defense:</Text>
+                    <Text style={styles.statValue}>{card.defense}</Text>
+                  </View>
+                  <View style={styles.statItem}>
+                    <Text style={styles.statLabel}>ID:</Text>
+                    <Text style={styles.statValue}>{card.id}</Text>
+                  </View>
+                </View>
+                <View style={styles.statsColumn}>
+                  <View style={styles.statItem}>
+                    <Text style={styles.statLabel}>Rarity:</Text>
+                    <Text style={styles.statValue}>{card.type}</Text>
+                  </View>
+                  <View style={styles.statItem}>
+                    <Text style={styles.statLabel}>Element:</Text>
+                    <Text style={styles.statValue}>{card.element}</Text>
+                  </View>
+                  <View style={styles.statItem}>
+                    <Text style={styles.statLabel}>Number:</Text>
+                    <Text style={styles.statValue}>{card.pulledGlobalCount}</Text>
+                  </View>
+                </View>
+              </View>
+              <Text style={styles.description}>{card.description}</Text>
+            </View>
           </View>
         ) : (
-          <View style={styles.textContainer}>
-            <Text style={styles.rarity}>{card.type}</Text>
-            <Text style={styles.name}>{card.name}</Text>
+          <View>
+            <Image
+              source={{ uri: imageURL }}
+              style={styles.image}
+              resizeMode='cover'
+            />
+            <View style={styles.textContainer}>
+              {/* <Text style={styles.rarity}>{card.type}</Text> */}
+              <Text style={styles.name}>{card.name}</Text>
+              {/* <Text style={styles.number}>{card.pulledGlobalCount}</Text> */}
+            </View>
           </View>
         )}
       </TouchableOpacity>
@@ -161,7 +199,6 @@ export default Card;
 
 const styles = StyleSheet.create({
   card: {
-    // position: 'absolute',
     alignSelf: 'center',
     backgroundColor: '#fff',
     borderColor: '#6C757D',
@@ -178,6 +215,61 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     overflow: 'hidden'
   },
+  backImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    opacity: 0.3
+  },
+  backContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    transform: [
+      {
+        scaleX: -1
+      }
+    ]
+  },
+  backContent: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 16
+  },
+  statsColumn: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  statItem: {
+    marginBottom: 8
+  },
+  statLabel: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+    textAlign: 'center'
+  },
+  statValue: {
+    color: '#fff',
+    fontSize: 16,
+    textAlign: 'center'
+  },
+  description: {
+    color: '#fff',
+    fontSize: 14,
+    textAlign: 'center'
+  },
   image: {
     width: '100%',
     height: '100%',
@@ -191,39 +283,40 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     borderRadius: 8,
-    padding: 10,
-    transform: [
-      {
-        scaleX: -1
-      }
-    ]
+    padding: 10
   },
   textContainer: {
     position: 'absolute',
     bottom: 0,
-    justifyContent: 'space-between',
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
-    width: '100%',
-    borderBottomLeftRadius: 6,
-    borderBottomRightRadius: 6
+    left: 0,
+    right: 0,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
   },
   rarity: {
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: '700',
     color: '#fff',
-    paddingLeft: 8,
-    marginTop: 25,
-    opacity: .9
+    opacity: 0.9,
   },
   name: {
-    maxWidth: '30%',
-    textAlign: 'center',
     fontSize: 20,
     fontWeight: '500',
     color: '#fff',
-    alignSelf: 'center',
-    marginTop: -28,
-    marginBottom: 10
+    textAlign: 'center',
+    marginTop: 4,
+    marginBottom: 8
+  },
+  number: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#fff',
+    position: 'absolute',
+    top: 8,
+    right: 8,
   },
   backsideName: {
     fontSize: 42,
