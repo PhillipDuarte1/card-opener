@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, ScrollView, StyleSheet, KeyboardAvoiding
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { db, auth, storage } from '../utils/firebase';
+import { v4 as uuidv4 } from 'uuid';
 
 const { width } = Dimensions.get('window');
 
@@ -13,7 +14,7 @@ const AddPack = () => {
   const keyboardVerticalOffset = Platform.OS === 'ios' ? 86 : 0;
 
   const addCard = () => {
-    const newCard = { id: '', name: '', type: '', rate: '', count: 0 };
+    const newCard = { id: '', author: '', name: '', type: '', globalCount: 0, description: '' };
     setCards((prevCards) => [...prevCards, newCard]);
   };
 
@@ -46,32 +47,33 @@ const AddPack = () => {
   };
 
   const submitPack = () => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        const packData = {
-          id: packName,
-          cards: {},
-        };
+    const packId = uuidv4();
+    const user = auth.currentUser;
+    if (user) {
+      const packData = {
+        id: packId,
+        packName: packName,
+        description: '',
+        cards: {},
+      };
 
-        cards.forEach((card) => {
-          const cardRef = db.ref(`pending/${user.uid}/packs/${packName}/cards`).push();
-          const cardId = cardRef.key;
+      cards.forEach((card) => {
+        const cardId = uuidv4(); // Generate a unique card ID using uuid
+        card.id = cardId;
+        packData.cards[cardId] = card;
+      });
 
-          card.id = cardId;
-          packData.cards[cardId] = card;
+      db.ref(`pending/${user.uid}/${packId}`)
+        .set(packData)
+        .then(() => {
+          setPackName('');
+          setCards([]);
+          alert('Pack Added For Review');
+        })
+        .catch((error) => {
+          alert(error);
         });
-
-        db.ref(`pending/${user.uid}/packs/${packName}`).set(packData)
-          .then(() => {
-            setPackName('');
-            setCards([]);
-            alert('Pack Added For Review');
-          })
-          .catch((error) => {
-            alert(error);
-          });
-      }
-    });
+    }
   };
 
   return (
@@ -127,6 +129,8 @@ const AddPack = () => {
     </KeyboardAvoidingView>
   );
 };
+
+export default AddPack;
 
 const styles = StyleSheet.create({
   container: {
@@ -185,5 +189,3 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   }
 });
-
-export default AddPack;

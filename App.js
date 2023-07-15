@@ -11,6 +11,7 @@ import LoginScreen from './pages/LoginScreen';
 import RegisterScreen from './pages/RegisterScreen';
 import BinderScreen from './pages/BinderScreen';
 import AddPackScreen from './pages/AddPackScreen';
+import AdminPanelScreen from './pages/AdminPanelScreen';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -39,7 +40,8 @@ export default function App() {
         <Stack.Screen name='Register' component={RegisterScreen} />
         <Stack.Screen name='Packs' component={PacksScreen} />
         <Stack.Screen name='Binder' component={BinderScreen} />
-        <Stack.Screen name='AddPack' component={AddPackScreen} />
+        <Stack.Screen name='Add Pack' component={AddPackScreen} />
+        <Stack.Screen name='Admin Panel' component={AdminPanelScreen} />
       </Stack.Navigator>
     )
   }
@@ -83,7 +85,13 @@ export default function App() {
           <DrawerItem
             label='Add Pack'
             icon={() => (<MaterialIcons name='add-to-photos' size={24} color={iconColor} />)}
-            onPress={() => props.navigation.navigate('AddPack')}
+            onPress={() => props.navigation.navigate('Add Pack')}
+            labelStyle={styles.item}
+          />
+          <DrawerItem
+            label='Admin Panel'
+            icon={() => (<MaterialIcons name='admin-panel-settings' size={24} color={iconColor} />)}
+            onPress={() => props.navigation.navigate('Admin Panel')}
             labelStyle={styles.item}
           />
           <DrawerItem

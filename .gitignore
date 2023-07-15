@@ -1,5 +1,6 @@
 utils/firebase.js
 node_modules/
+notes.txt
 .expo/
 dist/
 npm-debug.*
