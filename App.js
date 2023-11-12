@@ -12,6 +12,7 @@ import RegisterScreen from './pages/RegisterScreen';
 import BinderScreen from './pages/BinderScreen';
 import AddPackScreen from './pages/AddPackScreen';
 import AdminPanelScreen from './pages/AdminPanelScreen';
+import ProfileScreen from './pages/ProfileScreen';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -40,8 +41,9 @@ export default function App() {
         <Stack.Screen name='Register' component={RegisterScreen} />
         <Stack.Screen name='Packs' component={PacksScreen} />
         <Stack.Screen name='Binder' component={BinderScreen} />
-        <Stack.Screen name='Add Pack' component={AddPackScreen} />
+        <Stack.Screen name='Create Pack' component={AddPackScreen} />
         <Stack.Screen name='Admin Panel' component={AdminPanelScreen} />
+        <Stack.Screen name='Profile' component={ProfileScreen} />
       </Stack.Navigator>
     )
   }
@@ -83,9 +85,9 @@ export default function App() {
             labelStyle={styles.item}
           />
           <DrawerItem
-            label='Add Pack'
+            label='Create Pack'
             icon={() => (<MaterialIcons name='add-to-photos' size={24} color={iconColor} />)}
-            onPress={() => props.navigation.navigate('Add Pack')}
+            onPress={() => props.navigation.navigate('Create Pack')}
             labelStyle={styles.item}
           />
           <DrawerItem
@@ -95,9 +97,9 @@ export default function App() {
             labelStyle={styles.item}
           />
           <DrawerItem
-            label='Settings'
+            label='Profile'
             icon={() => (<FontAwesome name='gear' size={24} color={iconColor} />)}
-            onPress={() => props.navigation.navigate('Settings')}
+            onPress={() => props.navigation.navigate('Profile')}
             labelStyle={styles.item}
           />
         </ScrollView>
@@ -130,8 +132,16 @@ export default function App() {
           component={BinderScreen}
         />
         <Drawer.Screen
-          name='AddPack'
+          name='Create Pack'
           component={AddPackScreen}
+        />
+        <Drawer.Screen
+          name='Admin Panel'
+          component={AdminPanelScreen}
+        />
+        <Drawer.Screen
+          name='Profile'
+          component={ProfileScreen}
         />
       </Drawer.Navigator>
     </NavigationContainer>

@@ -5,7 +5,7 @@ import Loading from './Loading';
 
 const { width } = Dimensions.get('window');
 
-const Card = ({ card, draggable, size = 'default' }) => {
+const Card = ({ card, draggable, flippable = true, size = 'default' }) => {
   const [imageURL, setImageURL] = useState(null);
   const [loading, setLoading] = useState(true);
   const [flipped, setFlipped] = useState(false);
@@ -92,16 +92,18 @@ const Card = ({ card, draggable, size = 'default' }) => {
   };
 
   const flipCard = () => {
-    Animated.timing(
-      flipAnimation,
-      {
-        toValue: flipped ? 0 : 1,
-        duration: 300,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      }
-    ).start();
-    setFlipped(!flipped);
+    if (flippable) {
+      Animated.timing(
+        flipAnimation,
+        {
+          toValue: flipped ? 0 : 1,
+          duration: 300,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }
+      ).start();
+      setFlipped(!flipped);
+    }
   };
 
   const flipInterpolation = flipAnimation.interpolate({

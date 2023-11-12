@@ -5,6 +5,8 @@ import { db } from '../utils/firebase';
 const AdminPanel = () => {
     const [pendingPacks, setPendingPacks] = useState([]);
 
+    const timestamp = Date.now();
+
     useEffect(() => {
         fetchPendingPacks();
     }, []);
@@ -33,7 +35,11 @@ const AdminPanel = () => {
             const pack = pendingPacks.find((user) => user.packs.some((pack) => pack.id === packId));
             if (pack) {
                 const { userId } = pack;
-                await db.ref(`packs/${packId}`).set(pack.packs.find((pack) => pack.id === packId));
+                const acceptedPack = {
+                    ...pack.packs.find((pack) => pack.id === packId),
+                    addedAt: timestamp,
+                };
+                await db.ref(`packs/${packId}`).set(acceptedPack);
                 await db.ref(`pending/${userId}/${packId}`).remove();
 
                 setPendingPacks((prevPendingPacks) =>
@@ -52,6 +58,7 @@ const AdminPanel = () => {
             console.error('Error accepting pack:', error);
         }
     };
+
 
     const denyPack = async (userId, packId) => {
         try {
@@ -83,7 +90,9 @@ const AdminPanel = () => {
                         {user.packs.map((pack) => (
                             <View key={pack.id} style={styles.packContainer}>
                                 <Text style={styles.packName}>{pack.packName}</Text>
-                                <Text style={styles.packDescription}>{pack.description}</Text>
+                                {pack.description && (
+                                    <Text style={styles.packDescription}>{pack.description}</Text>
+                                )}
                                 <ScrollView horizontal={true}>
                                     {pack.cards && Object.values(pack.cards).map((card) => (
                                         <View key={card.id} style={styles.cardContainer}>
@@ -130,15 +139,17 @@ const styles = StyleSheet.create({
     heading: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 16
+        marginBottom: 16,
+        color: '#fff'
     },
     userContainer: {
         marginBottom: 16
     },
     userId: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
-        marginBottom: 8
+        marginBottom: 8,
+        color: '#fff'
     },
     packContainer: {
         borderWidth: 1,
@@ -153,9 +164,10 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     packName: {
-        fontSize: 16,
+        fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 8
+        marginBottom: 8,
+        color: '#fff'
     },
     packId: {
         fontSize: 8,
@@ -164,7 +176,7 @@ const styles = StyleSheet.create({
     },
     packDescription: {
         fontSize: 14,
-        color: '#666',
+        color: '#c4c4c4',
         marginBottom: 12
     },
     cardContainer: {
@@ -180,10 +192,12 @@ const styles = StyleSheet.create({
     cardName: {
         fontSize: 14,
         fontWeight: 'bold',
-        marginBottom: 4
+        marginBottom: 8,
+        color: '#fff'
     },
     cardDescription: {
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+        color: '#fff'
     },
     cardImage: {
         marginBottom: 4,

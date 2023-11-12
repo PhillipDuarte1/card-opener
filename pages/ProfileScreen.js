@@ -1,21 +1,22 @@
 import { View, StyleSheet } from 'react-native';
-import AddPack from '../components/AddPack';
+import AdminPanel from '../components/AdminPanel';
 import useUser from '../hooks/useUser';
 import Header from '../components/Header';
+import Profile from '../components/Profile';
 
-const AddPackScreen = ({ navigation }) => {
+const ProfileScreen = ({ navigation }) => {
     const user = useUser();
     return (
         <View style={styles.container}>
             <Header navigation={navigation} user={user} />
             <View style={styles.contentContainer}>
-                <AddPack />
+                <Profile />
             </View>
         </View>
     );
 };
 
-export default AddPackScreen;
+export default ProfileScreen;
 
 const styles = StyleSheet.create({
     container: {
@@ -23,6 +24,6 @@ const styles = StyleSheet.create({
         height: '100%'
     },
     contentContainer: {
-        marginTop: 200,
-    }
+        marginTop: 200
+    },
 });

@@ -1,13 +1,19 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { storage } from '../utils/firebase';
 import useCardPacks from '../hooks/useCardPacks';
 import Loading from './Loading';
 import Card from './Card';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const Binder = ({ searchQuery, ordering }) => {
   const { packs, loading } = useCardPacks();
   const [cards, setCards] = useState([]);
+
+  const navigation = useNavigation();
+  // const route = useRoute();
+  // const { selectedCardId } = route.params || {};
 
   const filteredCards = useMemo(() => {
     return cards.filter((card) =>
@@ -32,6 +38,10 @@ const Binder = ({ searchQuery, ordering }) => {
     });
   }, [filteredCards, ordering]);
 
+  const handleCardSelection = (card) => {
+    navigation.navigate('Profile', { selectedCardId: card.id });
+  }
+
   useEffect(() => {
     if (!loading && packs.length > 0) {
       const allCards = Object.values(packs[0][1]).flatMap((cards) => {
@@ -52,7 +62,9 @@ const Binder = ({ searchQuery, ordering }) => {
           ) : (
             sortedCards.map((card) => (
               <View style={styles.cardSleeve} key={card.uid}>
-                <Card card={card} draggable={false} size={{ width: 200, height: 300 }} />
+                <TouchableOpacity key={card.id} onPress={() => handleCardSelection(card)}>
+                  <Card card={card} draggable={false} flippable={true} size={{ width: 200, height: 300 }} />
+                </TouchableOpacity>
               </View>
             ))
           )}
